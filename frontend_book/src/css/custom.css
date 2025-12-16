@@ -1,0 +1,279 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #22c55e;
+  --ifm-color-primary-dark: #16a34a;
+  --ifm-color-primary-darker: #15803d;
+  --ifm-color-primary-darkest: #166534;
+  --ifm-color-primary-light: #4ade80;
+  --ifm-color-primary-lighter: #86efac;
+  --ifm-color-primary-lightest: #bbf7d0;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+  --ifm-hero-text-color: #000; /* Black text in light mode */
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+[data-theme='dark'] {
+  --ifm-color-primary: #4ade80;
+  --ifm-color-primary-dark: #22c55e;
+  --ifm-color-primary-darker: #16a34a;
+  --ifm-color-primary-darkest: #15803d;
+  --ifm-color-primary-light: #86efac;
+  --ifm-color-primary-lighter: #bbf7d0;
+  --ifm-color-primary-lightest: #dcfce7;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  --ifm-hero-text-color: white; /* White text in dark mode */
+}
+
+/* Ensure all text is white in dark mode */
+[data-theme='dark'] {
+  color: white;
+}
+
+[data-theme='dark'] .hero__subtitle {
+  color: #e2e8f0; /* Light gray for better contrast */
+}
+
+[data-theme='dark'] .heroDescription {
+  color: #e2e8f0; /* Light gray for better contrast */
+}
+
+/* Hero banner customization */
+.hero--primary {
+  color: var(--ifm-hero-text-color);
+  background: none;
+}
+
+/* Heading adjustments */
+h1 {
+  font-size: 2.5rem;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  color: #000; /* Black in light mode */
+}
+
+[data-theme='dark'] h1 {
+  color: white; /* White in dark mode */
+}
+
+h2 {
+  font-size: 2rem;
+  line-height: 1.3;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #000; /* Black in light mode */
+}
+
+[data-theme='dark'] h2 {
+  color: white; /* White in dark mode */
+}
+
+h3 {
+  font-size: 1.5rem;
+  line-height: 1.4;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: #000; /* Black in light mode */
+}
+
+[data-theme='dark'] h3 {
+  color: white; /* White in dark mode */
+}
+
+.hero__title {
+  color: #000; /* Black in light mode */
+}
+
+[data-theme='dark'] .hero__title {
+  color: white; /* White in dark mode */
+}
+
+.hero__subtitle {
+  color: #374151; /* Dark gray in light mode */
+}
+
+[data-theme='dark'] .hero__subtitle {
+  color: #e2e8f0; /* Light gray in dark mode */
+}
+
+/* Improved alignment and spacing */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Navbar logo improvements */
+.navbar__logo img {
+  width: 40px;
+  height: 40px;
+  transition: transform 0.2s ease;
+}
+
+.navbar__logo img:hover {
+  transform: scale(1.1);
+}
+
+/* Button styling */
+.button {
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 12px 24px;
+  transition: all 0.3s ease;
+  border: none;
+  font-size: 1.1rem;
+  color: #000; /* Default to black in light mode */
+}
+
+.button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+  text-decoration: none;
+}
+
+.button--primary {
+  background-color: var(--ifm-color-primary);
+  color: white;
+}
+
+.button--primary:hover {
+  background-color: var(--ifm-color-primary-dark);
+  color: white;
+}
+
+.button--secondary {
+  background-color: transparent;
+  color: var(--ifm-color-primary);
+  border: 2px solid var(--ifm-color-primary);
+}
+
+.button--secondary:hover {
+  background-color: var(--ifm-color-primary);
+  color: white;
+}
+
+/* Dark mode button styling */
+[data-theme='dark'] .button {
+  color: white; /* White text in dark mode */
+}
+
+[data-theme='dark'] .button--secondary {
+  color: var(--ifm-color-primary);
+  border: 2px solid var(--ifm-color-primary);
+}
+
+[data-theme='dark'] .button--secondary:hover {
+  background-color: var(--ifm-color-primary);
+  color: #000; /* Black text when hovered in dark mode */
+}
+
+/* Main content alignment */
+.main-wrapper {
+  padding: 0 1rem;
+}
+
+/* Footer improvements */
+.footer--dark {
+  background-color: #1e293b;
+}
+
+/* Responsive adjustments */
+@media (max-width: 996px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+  }
+
+  .container {
+    padding: 0 0.75rem;
+  }
+}
+
+/* Custom styles for educational content */
+.educational-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.learning-objectives {
+  background-color: #f0f9ff;
+  border-left: 4px solid var(--ifm-color-primary);
+  padding: 1rem;
+  margin: 1.5rem 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.learning-objectives h3 {
+  margin-top: 0;
+  color: var(--ifm-color-primary);
+}
+
+.summary-section {
+  background-color: #f0fdf4;
+  border: 1px solid var(--ifm-color-primary-light);
+  border-radius: 4px;
+  padding: 1rem;
+  margin: 1.5rem 0;
+}
+
+.code-example {
+  background-color: #f6f8fa;
+  border-radius: 6px;
+  padding: 1rem;
+  margin: 1rem 0;
+  border-left: 3px solid var(--ifm-color-primary);
+}
+
+/* Homepage features section */
+.features {
+  padding: 4rem 0;
+}
+
+.featureSvg {
+  height: 200px;
+  width: 200px;
+  margin-bottom: 1rem;
+}
+
+/* Center content properly */
+.text--center {
+  text-align: center !important;
+}
+
+.padding-horiz--md {
+  padding: 0 1rem;
+}
+
+/* Improve image display */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Better table styling */
+.markdown table {
+  display: table;
+  width: 100%;
+}
+
+/* Card-like containers */
+.card {
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  transition: all 0.2s ease;
+  margin: 1rem 0;
+}
+
+.card:hover {
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}

@@ -1,0 +1,249 @@
+# Isaac ROS Perception API Contract
+# Based on functional requirements from spec.md
+
+openapi: 3.0.0
+info:
+  title: NVIDIA Isaac ROS Perception API
+  description: API for Isaac ROS hardware-accelerated perception nodes
+  version: 1.0.0
+
+paths:
+  /perception-nodes:
+    get:
+      summary: List available Isaac ROS perception nodes
+      responses:
+        '200':
+          description: List of available perception nodes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PerceptionNode'
+
+  /perception-nodes/{nodeId}/start:
+    post:
+      summary: Start an Isaac ROS perception node
+      parameters:
+        - name: nodeId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Perception node started successfully
+
+  /perception-nodes/{nodeId}/stop:
+    post:
+      summary: Stop an Isaac ROS perception node
+      parameters:
+        - name: nodeId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Perception node stopped successfully
+
+  /perception-nodes/{nodeId}/status:
+    get:
+      summary: Get status of an Isaac ROS perception node
+      parameters:
+        - name: nodeId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Perception node status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PerceptionNodeStatus'
+
+  /slam:
+    post:
+      summary: Start Isaac ROS SLAM system
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SlamConfig'
+      responses:
+        '200':
+          description: SLAM system started successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SlamStatus'
+
+  /slam/map:
+    get:
+      summary: Get current map from SLAM system
+      responses:
+        '200':
+          description: Current map from SLAM system
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SlamMap'
+
+components:
+  schemas:
+    PerceptionNode:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the perception node
+        name:
+          type: string
+          description: Name of the perception node
+        type:
+          type: string
+          enum: [visual_slam, detection2d, detection3d, apriltag, stereo_dnn]
+          description: Type of perception node
+        status:
+          type: string
+          enum: [stopped, running, error]
+          description: Current status of the node
+        input_topics:
+          type: array
+          items:
+            type: string
+          description: ROS topics this node subscribes to
+        output_topics:
+          type: array
+          items:
+            type: string
+          description: ROS topics this node publishes to
+
+    PerceptionNodeConfig:
+      type: object
+      properties:
+        node_type:
+          type: string
+          enum: [visual_slam, detection2d, detection3d, apriltag, stereo_dnn]
+          description: Type of perception node to create
+        cuda_device:
+          type: integer
+          description: CUDA device ID for acceleration
+        tensorrt_config:
+          $ref: '#/components/schemas/TensorRTConfig'
+        input_topics:
+          type: array
+          items:
+            type: string
+          description: Input topics for the node
+        output_topics:
+          type: array
+          items:
+            type: string
+          description: Output topics for the node
+
+    TensorRTConfig:
+      type: object
+      properties:
+        engine_path:
+          type: string
+          description: Path to TensorRT engine file
+        precision:
+          type: string
+          enum: [fp32, fp16, int8]
+          description: Precision for inference
+        max_batch_size:
+          type: integer
+          description: Maximum batch size for inference
+
+    PerceptionNodeStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [stopped, running, error]
+        gpu_utilization:
+          type: number
+          description: GPU utilization percentage
+          minimum: 0
+          maximum: 100
+        processing_rate:
+          type: number
+          description: Processing rate in Hz
+        latency:
+          type: number
+          description: Processing latency in milliseconds
+
+    SlamConfig:
+      type: object
+      properties:
+        algorithm:
+          type: string
+          enum: [visual_inertial, stereo_visual, rgbd]
+          description: SLAM algorithm to use
+        map_resolution:
+          type: number
+          description: Resolution of the map in meters per cell
+        map_size:
+          type: object
+          properties:
+            width:
+              type: number
+            height:
+              type: number
+          description: Size of the map in meters
+        camera_topics:
+          type: array
+          items:
+            type: string
+          description: Topics for camera input
+        imu_topic:
+          type: string
+          description: Topic for IMU input
+        loop_closure:
+          type: boolean
+          description: Whether to enable loop closure
+
+    SlamStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [stopped, initializing, running, error]
+        localization_accuracy:
+          type: object
+          properties:
+            position:
+              type: number
+              description: Position accuracy in meters
+            orientation:
+              type: number
+              description: Orientation accuracy in radians
+        map_coverage:
+          type: number
+          description: Map coverage percentage
+        processing_rate:
+          type: number
+          description: SLAM processing rate in Hz
+
+    SlamMap:
+      type: object
+      properties:
+        map_type:
+          type: string
+          enum: [2d_occupancy, 3d_pointcloud, semantic]
+          description: Type of map
+        resolution:
+          type: number
+          description: Resolution of the map in meters per cell
+        origin:
+          $ref: '#/components/schemas/Position'
+        data:
+          type: array
+          description: Map data in appropriate format
+        metadata:
+          type: object
+          description: Additional map metadata

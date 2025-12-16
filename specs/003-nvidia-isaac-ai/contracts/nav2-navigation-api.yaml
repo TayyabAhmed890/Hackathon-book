@@ -1,0 +1,280 @@
+# Nav2 Navigation API Contract
+# Based on functional requirements from spec.md
+
+openapi: 3.0.0
+info:
+  title: Nav2 Navigation API for Humanoid Robots
+  description: API for Nav2 navigation system adapted for bipedal humanoid robots
+  version: 1.0.0
+
+paths:
+  /navigation:
+    post:
+      summary: Start Nav2 navigation system for humanoid robot
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NavigationConfig'
+      responses:
+        '200':
+          description: Navigation system started successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NavigationStatus'
+
+  /navigation/goal:
+    post:
+      summary: Set navigation goal for humanoid robot
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NavigationGoal'
+      responses:
+        '200':
+          description: Navigation goal set successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NavigationResult'
+
+  /navigation/cancel:
+    post:
+      summary: Cancel current navigation goal
+      responses:
+        '200':
+          description: Navigation goal cancelled successfully
+
+  /navigation/status:
+    get:
+      summary: Get current navigation status
+      responses:
+        '200':
+          description: Current navigation status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NavigationStatus'
+
+  /navigation/path:
+    get:
+      summary: Get current planned path
+      responses:
+        '200':
+          description: Current planned path
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NavigationPath'
+
+  /navigation/costmaps:
+    get:
+      summary: Get current costmap data
+      responses:
+        '200':
+          description: Current costmap data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CostmapData'
+
+components:
+  schemas:
+    NavigationConfig:
+      type: object
+      properties:
+        robot_model:
+          type: string
+          description: Path to robot URDF/Xacro model
+        planner_type:
+          type: string
+          enum: [navfn, global_planner, teb_local_planner, dwa_local_planner]
+          description: Type of path planner to use
+        humanoid_constraints:
+          $ref: '#/components/schemas/HumanoidConstraints'
+        costmap_config:
+          $ref: '#/components/schemas/CostmapConfig'
+        behavior_tree:
+          type: string
+          description: Path to behavior tree XML file
+
+    HumanoidConstraints:
+      type: object
+      properties:
+        max_step_height:
+          type: number
+          description: Maximum height the robot can step over (meters)
+        max_step_width:
+          type: number
+          description: Maximum width of step (meters)
+        balance_margin:
+          type: number
+          description: Safety margin for balance (meters)
+        gait_pattern:
+          type: string
+          enum: [walk, trot, pace]
+          description: Default gait pattern for locomotion
+        foot_separation:
+          type: number
+          description: Distance between feet when standing (meters)
+
+    CostmapConfig:
+      type: object
+      properties:
+        resolution:
+          type: number
+          description: Resolution of costmap in meters per cell
+        inflation_radius:
+          type: number
+          description: Radius for obstacle inflation
+        obstacle_range:
+          type: number
+          description: Maximum range for obstacle detection
+        raytrace_range:
+          type: number
+          description: Maximum range for raytracing
+
+    NavigationGoal:
+      type: object
+      required:
+        - x
+        - y
+        - theta
+      properties:
+        x:
+          type: number
+          description: X coordinate of goal in map frame
+        y:
+          type: number
+          description: Y coordinate of goal in map frame
+        theta:
+          type: number
+          description: Orientation of goal in map frame (radians)
+        frame_id:
+          type: string
+          description: Frame ID for the goal (default: map)
+        tolerance:
+          type: number
+          description: Tolerance for reaching goal (meters)
+
+    NavigationResult:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [pending, active, succeeded, cancelled, aborted]
+          description: Current status of navigation
+        path_length:
+          type: number
+          description: Length of planned path in meters
+        estimated_time:
+          type: number
+          description: Estimated time to reach goal in seconds
+        success_rate:
+          type: number
+          description: Historical success rate for this type of navigation
+
+    NavigationStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [stopped, planning, executing, paused, error]
+        current_pose:
+          $ref: '#/components/schemas/Pose'
+        current_velocity:
+          $ref: '#/components/schemas/Twist'
+        distance_to_goal:
+          type: number
+          description: Distance to goal in meters
+        time_elapsed:
+          type: number
+          description: Time elapsed since navigation started in seconds
+
+    NavigationPath:
+      type: object
+      properties:
+        plan:
+          type: array
+          items:
+            $ref: '#/components/schemas/Pose'
+          description: Array of poses representing the planned path
+        path_id:
+          type: string
+          description: Unique identifier for this path
+        length:
+          type: number
+          description: Total length of the path in meters
+
+    CostmapData:
+      type: object
+      properties:
+        resolution:
+          type: number
+          description: Resolution of the costmap in meters per cell
+        width:
+          type: integer
+          description: Width of the costmap in cells
+        height:
+          type: integer
+          description: Height of the costmap in cells
+        origin:
+          $ref: '#/components/schemas/Pose'
+          description: Origin of the costmap in the map frame
+        data:
+          type: array
+          items:
+            type: integer
+          description: Costmap data as array of values (0-100)
+
+    Pose:
+      type: object
+      properties:
+        position:
+          $ref: '#/components/schemas/Position'
+        orientation:
+          $ref: '#/components/schemas/Quaternion'
+
+    Position:
+      type: object
+      properties:
+        x:
+          type: number
+        y:
+          type: number
+        z:
+          type: number
+
+    Quaternion:
+      type: object
+      properties:
+        x:
+          type: number
+        y:
+          type: number
+        z:
+          type: number
+        w:
+          type: number
+
+    Twist:
+      type: object
+      properties:
+        linear:
+          $ref: '#/components/schemas/Vector3'
+        angular:
+          $ref: '#/components/schemas/Vector3'
+
+    Vector3:
+      type: object
+      properties:
+        x:
+          type: number
+        y:
+          type: number
+        z:
+          type: number

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 512">
+  <rect width="1024" height="512" fill="#4f5b93"/>
+  <text x="512" y="256" text-anchor="middle" fill="white" font-family="Arial" font-size="32">Physical AI & Humanoid Robotics</text>
+  <text x="512" y="300" text-anchor="middle" fill="white" font-family="Arial" font-size="20">Module 1: The Robotic Nervous System (ROS 2)</text>
+</svg>

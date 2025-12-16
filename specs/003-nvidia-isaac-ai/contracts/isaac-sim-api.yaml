@@ -1,0 +1,256 @@
+# Isaac Sim API Contract
+# Based on functional requirements from spec.md
+
+openapi: 3.0.0
+info:
+  title: NVIDIA Isaac Sim API
+  description: API for interacting with NVIDIA Isaac Sim environments
+  version: 1.0.0
+
+paths:
+  /environments:
+    get:
+      summary: List available Isaac Sim environments
+      responses:
+        '200':
+          description: List of available environments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Environment'
+    post:
+      summary: Create a new Isaac Sim environment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnvironmentConfig'
+      responses:
+        '201':
+          description: Environment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Environment'
+
+  /environments/{envId}/start:
+    post:
+      summary: Start an Isaac Sim environment
+      parameters:
+        - name: envId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Environment started successfully
+
+  /environments/{envId}/stop:
+    post:
+      summary: Stop an Isaac Sim environment
+      parameters:
+        - name: envId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Environment stopped successfully
+
+  /environments/{envId}/data-generation:
+    post:
+      summary: Start synthetic data generation in environment
+      parameters:
+        - name: envId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataGenerationConfig'
+      responses:
+        '200':
+          description: Data generation started successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataGenerationStatus'
+
+components:
+  schemas:
+    Environment:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the environment
+        name:
+          type: string
+          description: Name of the environment
+        description:
+          type: string
+          description: Brief description of the environment
+        status:
+          type: string
+          enum: [stopped, running, paused]
+          description: Current status of the environment
+        created_at:
+          type: string
+          format: date-time
+          description: When the environment was created
+
+    EnvironmentConfig:
+      type: object
+      required:
+        - name
+        - scene_path
+      properties:
+        name:
+          type: string
+          description: Name for the new environment
+        scene_path:
+          type: string
+          description: Path to the USD scene file
+        lighting_config:
+          $ref: '#/components/schemas/LightingConfig'
+        physics_config:
+          $ref: '#/components/schemas/PhysicsConfig'
+        sensor_config:
+          $ref: '#/components/schemas/SensorConfig'
+
+    LightingConfig:
+      type: object
+      properties:
+        intensity:
+          type: number
+          description: Lighting intensity
+        color:
+          type: string
+          description: Lighting color in hex format
+        direction:
+          type: object
+          properties:
+            x:
+              type: number
+            y:
+              type: number
+            z:
+              type: number
+
+    PhysicsConfig:
+      type: object
+      properties:
+        gravity:
+          type: number
+          description: Gravity value (typically -9.81)
+        friction:
+          type: number
+          description: Default friction coefficient
+        restitution:
+          type: number
+          description: Default restitution coefficient
+
+    SensorConfig:
+      type: object
+      properties:
+        cameras:
+          type: array
+          items:
+            $ref: '#/components/schemas/CameraConfig'
+        lidar:
+          type: array
+          items:
+            $ref: '#/components/schemas/LidarConfig'
+        imu:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImuConfig'
+
+    CameraConfig:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Unique name for the camera
+        position:
+          $ref: '#/components/schemas/Position'
+        resolution:
+          type: object
+          properties:
+            width:
+              type: integer
+            height:
+              type: integer
+
+    LidarConfig:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Unique name for the LiDAR
+        position:
+          $ref: '#/components/schemas/Position'
+
+    ImuConfig:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Unique name for the IMU
+        position:
+          $ref: '#/components/schemas/Position'
+
+    Position:
+      type: object
+      properties:
+        x:
+          type: number
+        y:
+          type: number
+        z:
+          type: number
+
+    DataGenerationConfig:
+      type: object
+      required:
+        - output_path
+        - duration
+      properties:
+        output_path:
+          type: string
+          description: Path to save generated data
+        duration:
+          type: integer
+          description: Duration of data generation in seconds
+        domain_randomization:
+          type: boolean
+          description: Whether to apply domain randomization
+        annotation_format:
+          type: string
+          enum: [coco, kitti, pascal_voc]
+          description: Format for annotations
+
+    DataGenerationStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [running, completed, failed]
+        progress:
+          type: number
+          description: Progress percentage (0-100)
+        output_path:
+          type: string
+          description: Path where data was saved
+        generated_samples:
+          type: integer
+          description: Number of samples generated

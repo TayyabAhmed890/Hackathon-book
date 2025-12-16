@@ -1,0 +1,318 @@
+openapi: 3.0.0
+info:
+  title: Digital Twin Simulation API
+  description: API for managing digital twin simulations in educational robotics
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+
+paths:
+  /environments:
+    get:
+      summary: List all available simulation environments
+      responses:
+        '200':
+          description: List of simulation environments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Environment'
+    post:
+      summary: Create a new simulation environment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Environment'
+      responses:
+        '201':
+          description: Environment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Environment'
+
+  /environments/{envId}:
+    get:
+      summary: Get details of a specific environment
+      parameters:
+        - in: path
+          name: envId
+          required: true
+          schema:
+            type: string
+          description: Environment identifier
+      responses:
+        '200':
+          description: Environment details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Environment'
+    delete:
+      summary: Delete a simulation environment
+      parameters:
+        - in: path
+          name: envId
+          required: true
+          schema:
+            type: string
+          description: Environment identifier
+      responses:
+        '204':
+          description: Environment deleted successfully
+
+  /environments/{envId}/robots:
+    get:
+      summary: List robots in an environment
+      parameters:
+        - in: path
+          name: envId
+          required: true
+          schema:
+            type: string
+          description: Environment identifier
+      responses:
+        '200':
+          description: List of robots in the environment
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Robot'
+    post:
+      summary: Add a robot to the environment
+      parameters:
+        - in: path
+          name: envId
+          required: true
+          schema:
+            type: string
+          description: Environment identifier
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Robot'
+      responses:
+        '201':
+          description: Robot added to environment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Robot'
+
+  /environments/{envId}/scenarios:
+    post:
+      summary: Start a training scenario
+      parameters:
+        - in: path
+          name: envId
+          required: true
+          schema:
+            type: string
+          description: Environment identifier
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrainingScenario'
+      responses:
+        '200':
+          description: Scenario started successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingScenario'
+
+components:
+  schemas:
+    Environment:
+      type: object
+      required:
+        - id
+        - name
+        - description
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the environment
+        name:
+          type: string
+          description: Human-readable name
+        description:
+          type: string
+          description: Detailed description
+        physicsParameters:
+          $ref: '#/components/schemas/PhysicsParameters'
+        environmentObjects:
+          type: array
+          items:
+            $ref: '#/components/schemas/EnvironmentObject'
+
+    PhysicsParameters:
+      type: object
+      properties:
+        gravity:
+          $ref: '#/components/schemas/Vector3'
+        timeStep:
+          type: number
+          format: float
+          description: Simulation time step in seconds
+        realTimeFactor:
+          type: number
+          format: float
+          description: Multiplier for real-time simulation speed
+
+    Vector3:
+      type: object
+      properties:
+        x:
+          type: number
+          format: float
+        y:
+          type: number
+          format: float
+        z:
+          type: number
+          format: float
+
+    EnvironmentObject:
+      type: object
+      required:
+        - id
+        - name
+        - type
+      properties:
+        id:
+          type: string
+          description: Unique identifier
+        name:
+          type: string
+          description: Object name
+        type:
+          type: string
+          description: Object type (static, dynamic, obstacle)
+        pose:
+          $ref: '#/components/schemas/Pose'
+        dimensions:
+          $ref: '#/components/schemas/Vector3'
+
+    Pose:
+      type: object
+      properties:
+        position:
+          $ref: '#/components/schemas/Vector3'
+        orientation:
+          type: object
+          properties:
+            roll:
+              type: number
+              format: float
+            pitch:
+              type: number
+              format: float
+            yaw:
+              type: number
+              format: float
+
+    Robot:
+      type: object
+      required:
+        - id
+        - modelReference
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the robot
+        modelReference:
+          type: string
+          description: Path to URDF/XACRO model
+        name:
+          type: string
+          description: Human-readable name
+        physicalProperties:
+          $ref: '#/components/schemas/PhysicalProperties'
+        pose:
+          $ref: '#/components/schemas/Pose'
+        sensors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Sensor'
+
+    PhysicalProperties:
+      type: object
+      properties:
+        mass:
+          type: number
+          format: float
+          description: Total robot mass in kg
+        dimensions:
+          $ref: '#/components/schemas/Vector3'
+        inertiaTensor:
+          type: object
+          description: 3x3 inertia tensor matrix
+
+    Sensor:
+      type: object
+      required:
+        - id
+        - type
+      properties:
+        id:
+          type: string
+          description: Unique identifier
+        type:
+          type: string
+          enum: [LIDAR, DepthCamera, IMU, Camera, GPS, ForceTorque]
+          description: Sensor type
+        mountingPose:
+          $ref: '#/components/schemas/Pose'
+        parameters:
+          type: object
+          description: Type-specific configuration parameters
+        outputTopic:
+          type: string
+          description: ROS 2 topic name for sensor data
+
+    TrainingScenario:
+      type: object
+      required:
+        - id
+        - title
+        - environmentId
+      properties:
+        id:
+          type: string
+          description: Unique identifier
+        title:
+          type: string
+          description: Human-readable title
+        description:
+          type: string
+          description: Detailed description
+        environmentId:
+          type: string
+          description: Reference to environment
+        initialRobotState:
+          $ref: '#/components/schemas/Robot'
+        objectives:
+          type: array
+          items:
+            type: string
+            description: Learning objectives
+        successCriteria:
+          type: array
+          items:
+            type: string
+            description: Conditions for scenario completion
+        state:
+          type: string
+          enum: [Not Started, In Progress, Completed, Failed]

@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git fetch --all --prune)",
+      "Bash(powershell -ExecutionPolicy Bypass -File \".specify/scripts/powershell/check-prerequisites.ps1\" -Json -RequireTasks -IncludeTasks)",
+      "Bash(.specify/scripts/powershell/create-new-feature.ps1 -Json \"Module: 4 – Vision-Language-Action (VLA)\n\nGoal:\nDemonstrate how large language models, perception, and robotics converge to produce intelligent humanoid behavior.\n\nTarget Audience:\nStudents who completed Modules 1–3.\n\nModule Scope:\nLanguage-driven control, cognitive planning, and end-to-end autonomous humanoid behavior.\n\nStructure (Docusaurus – 3 Chapters):\n\nChapter 1: Voice-to-Action Interfaces\n- Voice commands using OpenAI Whisper\n- Speech-to-intent pipelines\n- ROS 2 action triggering concepts\n\nChapter 2: Cognitive Planning with LLMs\n- Translating natural language into task plans\n- LLM-based reasoning for robotic actions\n- Mapping plans to ROS 2 behaviors\n\nChapter 3: Capstone – The Autonomous Humanoid\n- End-to-end system integration\n- Navigation, perception, and manipulation\n- Autonomous task execution in simulation\" -Json -Number 4 -ShortName \"vla-humanoid-module\")",
+      "Bash(.specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks)"
+    ]
+  }
+}

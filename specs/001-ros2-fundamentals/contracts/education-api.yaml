@@ -1,0 +1,100 @@
+# API Contract: Educational Module Interactions
+
+## Overview
+This API contract defines potential endpoints for interactive features that could be added to the educational module, such as progress tracking, quiz submissions, or interactive examples.
+
+## Base URL
+```
+https://api.example.com/v1/education
+```
+
+## Endpoints
+
+### 1. Track Chapter Progress
+- **Endpoint**: `POST /modules/{moduleId}/chapters/{chapterId}/progress`
+- **Description**: Records the student's progress in a specific chapter
+- **Request**:
+  ```json
+  {
+    "studentId": "string",
+    "completionPercentage": "integer (0-100)",
+    "timeSpent": "integer (seconds)",
+    "lastPosition": "integer (word position in chapter)"
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "status": "success",
+    "progressId": "string",
+    "updatedAt": "timestamp"
+  }
+  ```
+
+### 2. Submit Quiz Answers
+- **Endpoint**: `POST /modules/{moduleId}/chapters/{chapterId}/quiz`
+- **Description**: Submits answers to quiz questions at the end of a chapter
+- **Request**:
+  ```json
+  {
+    "studentId": "string",
+    "answers": [
+      {
+        "questionId": "string",
+        "selectedOption": "string"
+      }
+    ]
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "score": "integer (0-100)",
+    "feedback": [
+      {
+        "questionId": "string",
+        "correct": "boolean",
+        "explanation": "string"
+      }
+    ]
+  }
+  ```
+
+### 3. Get Chapter Content
+- **Endpoint**: `GET /modules/{moduleId}/chapters/{chapterId}/content`
+- **Description**: Retrieves the content of a specific chapter (could be used for dynamic content loading)
+- **Response**:
+  ```json
+  {
+    "chapterId": "string",
+    "title": "string",
+    "content": "string (Markdown format)",
+    "learningObjectives": ["string"],
+    "estimatedReadingTime": "integer (minutes)"
+  }
+  ```
+
+## Authentication
+All endpoints require a valid API key in the header:
+```
+Authorization: Bearer {api_key}
+```
+
+## Error Responses
+All endpoints follow the standard error format:
+```json
+{
+  "error": {
+    "code": "string",
+    "message": "string",
+    "details": "object (optional)"
+  }
+}
+```
+
+## Status Codes
+- `200`: Success
+- `400`: Bad request (invalid input)
+- `401`: Unauthorized
+- `404`: Resource not found
+- `500`: Internal server error
