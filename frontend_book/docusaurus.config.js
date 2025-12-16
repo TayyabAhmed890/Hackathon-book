@@ -16,8 +16,8 @@ const config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub Pages, you don't need these.
-  organizationName: 'facebook', // Usually your GitHub org/user name.
-  projectName: 'docusaurus', // Usually your repo name.
+  organizationName: 'TayyabAhmed890', // Usually your GitHub org/user name.
+  projectName: 'Hackathon-book', // Usually your repo name.
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -40,7 +40,7 @@ const config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+            'https://github.com/TayyabAhmed890/Hackathon-book/edit/main/frontend_book/',
         },
         blog: false, // Optional: disable the blog plugin
         theme: {
@@ -54,19 +54,14 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       // Replace with your project's social card
-      image: '/img/docusaurus-social-card.jpg',
       navbar: {
         title: 'Physical AI & Robotics',
-        logo: {
-          alt: 'Physical AI & Robotics Logo',
-          src: '/img/logo.svg',
-        },
         items: [
           {
             type: 'docSidebar',
             sidebarId: 'tutorialSidebar',
             position: 'left',
-            label: 'Tutorials',
+            label: 'Book',
           },
           {
             href: 'https://github.com/facebook/docusaurus',
@@ -79,7 +74,7 @@ const config = {
         style: 'dark',
         links: [
           {
-            title: 'Tutorials',
+            title: 'Book',
             items: [
               {
                 label: 'Introduction',
@@ -97,6 +92,10 @@ const config = {
                 label: 'Module 3: NVIDIA Isaac AI',
                 to: '/docs/module-3/intro',
               },
+              {
+                label: 'Module 4: Vision-Language-Action (VLA)',
+                to: '/docs/module-4-vla/index',
+              },
             ],
           },
           {
@@ -104,11 +103,11 @@ const config = {
             items: [
               {
                 label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+                href: 'https://stackoverflow.com/questions/tagged/ros+or+robotics',
               },
               {
-                label: 'Discord',
-                href: 'https://discordapp.com/invite/docusaurus',
+                label: 'Robotics Forum',
+                href: 'https://discourse.ros.org/',
               },
             ],
           },
@@ -117,7 +116,7 @@ const config = {
             items: [
               {
                 label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
+                href: 'https://github.com/TayyabAhmed890/Hackathon-book',
               },
             ],
           },

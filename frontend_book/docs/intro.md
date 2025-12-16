@@ -1,5 +1,5 @@
 ---
-slug: /docs/intro
+slug: /intro
 ---
 
 # Introduction
