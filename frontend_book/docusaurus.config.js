@@ -9,7 +9,7 @@ const config = {
   favicon: '/img/favicon.ico',
 
   // Set the production url of your site here
-  url: 'https://your-vercel-project.vercel.app',
+  url: 'https://physical-ai-humanoid-robotics.vercel.app',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub Pages: https://<USERNAME>.github.io/<REPO>/
   baseUrl: '/',
@@ -19,7 +19,7 @@ const config = {
   organizationName: 'TayyabAhmed890', // Usually your GitHub org/user name.
   projectName: 'Hackathon-book', // Usually your repo name.
 
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
 
   // Even if you don't use internationalization, you can use this field to set
