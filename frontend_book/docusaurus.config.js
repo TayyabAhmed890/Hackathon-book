@@ -9,10 +9,11 @@ const config = {
   favicon: '/img/favicon.ico',
 
   // Set the production url of your site here
-  url: 'https://hackathon-book-alpha.vercel.app',
+  url: 'https://', // Vercel will handle the domain automatically
   // Set the /<baseUrl>/ pathname under which your site is served
-  // For GitHub Pages: https://<USERNAME>.github.io/<REPO>/
   baseUrl: '/',
+  // Additional settings for Vercel deployment
+  trailingSlash: false,
 
   // GitHub pages deployment config.
   // If you aren't using GitHub Pages, you don't need these.
