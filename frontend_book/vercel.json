@@ -1,5 +1,4 @@
 {
-  "rootDirectory": "frontend_book",
   "builds": [
     {
       "src": "package.json",
