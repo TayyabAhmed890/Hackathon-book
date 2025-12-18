@@ -11,7 +11,7 @@ const config = {
   // Set the production url of your site here
   url: 'https://hackathon-book-alpha.vercel.app', // Vercel will handle the domain automatically
   // Set the /<baseUrl>/ pathname under which your site is served
-  baseUrl: '/docs/',
+  baseUrl: '/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub Pages, you don't need these.
